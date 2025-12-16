@@ -642,6 +642,30 @@
             margin-bottom: 10px;
         }
 
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .calendar-day {
                 font-size: 0.85em;
@@ -755,7 +779,32 @@
         </div>
     </div>
 
-    <script>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <p>Verbinden met Firebase...</p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // VERVANG DIT MET JOUW FIREBASE CONFIG
+        // Volg de stappen in FIREBASE_SETUP.md om je eigen config te krijgen
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const firebaseApp = initializeApp(firebaseConfig);
+        const db = getFirestore(firebaseApp);
+
         class StudioBooking {
             constructor() {
                 this.selectedPerson = null;
@@ -766,6 +815,8 @@
                 this.currentChecklistBooking = null;
                 this.isAuthenticated = false;
                 this.PASSWORD = '7860';
+                this.db = db;
+                this.unsubscribe = null;
 
                 this.init();
             }
@@ -803,6 +854,9 @@
             }
 
             logout() {
+                if (this.unsubscribe) {
+                    this.unsubscribe();
+                }
                 sessionStorage.removeItem('studioAuth');
                 this.isAuthenticated = false;
                 document.getElementById('loginContainer').style.display = 'block';
@@ -815,11 +869,30 @@
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('mainContainer').classList.add('show');
 
-                this.bookings = this.loadBookings();
                 this.setupEventListeners();
+                this.startFirebaseListener();
                 this.renderCalendar();
-                this.renderBookings();
-                this.checkForPendingCleanup();
+            }
+
+            startFirebaseListener() {
+                const q = query(collection(this.db, 'bookings'));
+
+                this.unsubscribe = onSnapshot(q, (snapshot) => {
+                    this.bookings = [];
+                    snapshot.forEach((doc) => {
+                        this.bookings.push({
+                            id: doc.id,
+                            ...doc.data()
+                        });
+                    });
+
+                    this.renderCalendar();
+                    this.renderBookings();
+                    this.checkForPendingCleanup();
+                }, (error) => {
+                    console.error('Firebase error:', error);
+                    this.showMessage('Fout bij verbinden met database. Check je Firebase configuratie.', 'error');
+                });
             }
 
             setupEventListeners() {
@@ -983,7 +1056,7 @@
                 return available;
             }
 
-            submitBooking() {
+            async submitBooking() {
                 const conflicts = this.findConflicts();
 
                 if (conflicts.length > 0) {
@@ -1001,39 +1074,41 @@
                     return;
                 }
 
-                const booking = {
-                    id: Date.now(),
-                    person: this.selectedPerson,
-                    dates: Array.from(this.selectedDates).sort(),
-                    createdAt: new Date().toISOString(),
-                    cleanupCompleted: false
-                };
+                try {
+                    const booking = {
+                        person: this.selectedPerson,
+                        dates: Array.from(this.selectedDates).sort(),
+                        createdAt: new Date().toISOString(),
+                        cleanupCompleted: false
+                    };
 
-                this.bookings.push(booking);
-                this.saveBookings();
+                    await addDoc(collection(this.db, 'bookings'), booking);
 
-                const datesReadable = booking.dates.map(d => this.formatDateReadable(d)).join(', ');
-                this.showMessage(
-                    `Gereserveerd: Studio — ${booking.person} op ${datesReadable}`,
-                    'success'
-                );
+                    const datesReadable = booking.dates.map(d => this.formatDateReadable(d)).join(', ');
+                    this.showMessage(
+                        `Gereserveerd: Studio — ${booking.person} op ${datesReadable}`,
+                        'success'
+                    );
 
-                this.selectedDates.clear();
-                document.querySelectorAll('.person-btn').forEach(b => b.classList.remove('active'));
-                this.selectedPerson = null;
-
-                this.renderCalendar();
-                this.renderBookings();
-                this.updateSubmitButton();
+                    this.selectedDates.clear();
+                    document.querySelectorAll('.person-btn').forEach(b => b.classList.remove('active'));
+                    this.selectedPerson = null;
+                    this.updateSubmitButton();
+                } catch (error) {
+                    console.error('Error adding booking:', error);
+                    this.showMessage('Fout bij opslaan reservering. Probeer opnieuw.', 'error');
+                }
             }
 
-            deleteBooking(id) {
+            async deleteBooking(id) {
                 if (confirm('Weet je zeker dat je deze reservering wilt verwijderen?')) {
-                    this.bookings = this.bookings.filter(b => b.id !== id);
-                    this.saveBookings();
-                    this.renderCalendar();
-                    this.renderBookings();
-                    this.showMessage('Reservering verwijderd', 'success');
+                    try {
+                        await deleteDoc(doc(this.db, 'bookings', id));
+                        this.showMessage('Reservering verwijderd', 'success');
+                    } catch (error) {
+                        console.error('Error deleting booking:', error);
+                        this.showMessage('Fout bij verwijderen. Probeer opnieuw.', 'error');
+                    }
                 }
             }
 
@@ -1078,7 +1153,7 @@
                                     </div>
                                 </div>
                                 <div class="booking-actions">
-                                    <button class="delete-btn" onclick="app.deleteBooking(${booking.id})">Verwijder</button>
+                                    <button class="delete-btn" onclick="window.appInstance.deleteBooking('${booking.id}')">Verwijder</button>
                                 </div>
                             </div>
                         `;
@@ -1103,8 +1178,8 @@
                                     </div>
                                 </div>
                                 <div class="booking-actions">
-                                    <button class="checklist-btn" onclick="app.showChecklistModal(${booking.id})">Opruim checklist</button>
-                                    <button class="delete-btn" onclick="app.deleteBooking(${booking.id})">Verwijder</button>
+                                    <button class="checklist-btn" onclick="window.appInstance.showChecklistModal('${booking.id}')">Opruim checklist</button>
+                                    <button class="delete-btn" onclick="window.appInstance.deleteBooking('${booking.id}')">Verwijder</button>
                                 </div>
                             </div>
                         `;
@@ -1134,15 +1209,6 @@
                 return `${day}-${month}-${year}`;
             }
 
-            saveBookings() {
-                localStorage.setItem('studioBookings', JSON.stringify(this.bookings));
-            }
-
-            loadBookings() {
-                const stored = localStorage.getItem('studioBookings');
-                return stored ? JSON.parse(stored) : [];
-            }
-
             checkForPendingCleanup() {
                 this.renderBookings();
             }
@@ -1168,68 +1234,17 @@
                 document.getElementById('submitChecklistBtn').disabled = !allChecked;
             }
 
-            submitChecklist() {
-                const booking = this.bookings.find(b => b.id === this.currentChecklistBooking);
-
-                if (booking) {
-                    booking.cleanupCompleted = true;
-                    this.saveBookings();
+            async submitChecklist() {
+                try {
+                    await updateDoc(doc(this.db, 'bookings', this.currentChecklistBooking), {
+                        cleanupCompleted: true
+                    });
 
                     document.getElementById('checklistModal').classList.remove('show');
-                    this.renderCalendar();
-                    this.renderBookings();
                     this.showMessage('Opruim-checklist voltooid! Reservering is nu afgesloten.', 'success');
-                }
-            }
-
-            exportData() {
-                const data = JSON.stringify(this.bookings, null, 2);
-                const blob = new Blob([data], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `studio-reserveringen-${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-
-                this.showMessage('Gegevens geëxporteerd! Deel dit bestand met je broer en ouders.', 'success');
-            }
-
-            showImportDialog() {
-                const section = document.getElementById('importSection');
-                section.style.display = section.style.display === 'none' ? 'block' : 'none';
-            }
-
-            importData() {
-                const data = document.getElementById('importData').value.trim();
-
-                if (!data) {
-                    this.showMessage('Plak eerst de gegevens in het tekstveld.', 'error');
-                    return;
-                }
-
-                try {
-                    const importedBookings = JSON.parse(data);
-
-                    if (!Array.isArray(importedBookings)) {
-                        throw new Error('Ongeldige data');
-                    }
-
-                    const existingIds = new Set(this.bookings.map(b => b.id));
-                    const newBookings = importedBookings.filter(b => !existingIds.has(b.id));
-
-                    this.bookings.push(...newBookings);
-                    this.saveBookings();
-
-                    this.renderCalendar();
-                    this.renderBookings();
-
-                    document.getElementById('importData').value = '';
-                    document.getElementById('importSection').style.display = 'none';
-
-                    this.showMessage(`${newBookings.length} nieuwe reservering(en) geïmporteerd!`, 'success');
                 } catch (error) {
-                    this.showMessage('Ongeldige gegevens! Kopieer de volledige export.', 'error');
+                    console.error('Error updating booking:', error);
+                    this.showMessage('Fout bij opslaan. Probeer opnieuw.', 'error');
                 }
             }
 
@@ -1249,6 +1264,8 @@
         }
 
         const app = new StudioBooking();
+        window.appInstance = app;
+        window.app = app;
 
         setInterval(() => {
             if (app.isAuthenticated) {
