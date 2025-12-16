@@ -353,6 +353,75 @@
             background: #ffebee;
         }
 
+        .booking-item.person-louis {
+            border-color: #2196F3;
+            background: #E3F2FD;
+        }
+
+        .booking-item.person-louis.needs-cleanup {
+            border-color: #2196F3;
+            background: #BBDEFB;
+        }
+
+        .booking-item.person-victor {
+            border-color: #9C27B0;
+            background: #F3E5F5;
+        }
+
+        .booking-item.person-victor.needs-cleanup {
+            border-color: #9C27B0;
+            background: #E1BEE7;
+        }
+
+        .booking-item.person-chantal-reinout {
+            border-color: #FF9800;
+            background: #FFF3E0;
+        }
+
+        .booking-item.person-chantal-reinout.needs-cleanup {
+            border-color: #FF9800;
+            background: #FFE0B2;
+        }
+
+        .calendar-day.booked.person-louis {
+            background: #E3F2FD;
+            border-color: #2196F3;
+        }
+
+        .calendar-day.booked.person-louis::after {
+            color: #1976D2;
+        }
+
+        .calendar-day.booked.person-victor {
+            background: #F3E5F5;
+            border-color: #9C27B0;
+        }
+
+        .calendar-day.booked.person-victor::after {
+            color: #7B1FA2;
+        }
+
+        .calendar-day.booked.person-chantal-reinout {
+            background: #FFF3E0;
+            border-color: #FF9800;
+        }
+
+        .calendar-day.booked.person-chantal-reinout::after {
+            color: #F57C00;
+        }
+
+        .booking-person.color-louis {
+            color: #2196F3;
+        }
+
+        .booking-person.color-victor {
+            color: #9C27B0;
+        }
+
+        .booking-person.color-chantal-reinout {
+            color: #FF9800;
+        }
+
         .booking-info {
             flex: 1;
         }
@@ -619,7 +688,7 @@
                 <div class="person-selector">
                     <button class="person-btn" data-person="Louis">Louis</button>
                     <button class="person-btn" data-person="Victor">Victor</button>
-                    <button class="person-btn" data-person="Ouders">Ouders</button>
+                    <button class="person-btn" data-person="Chantal & Reinout">Chantal & Reinout</button>
                 </div>
             </div>
 
@@ -652,7 +721,7 @@
             </div>
 
             <div class="share-section">
-                <h2>Delen met broer en ouders</h2>
+                <h2>Synchroniseer Gegevens</h2>
                 <div class="share-buttons">
                     <button class="share-btn" onclick="app.exportData()">Exporteer gegevens</button>
                     <button class="share-btn" onclick="app.showImportDialog()">Importeer gegevens</button>
@@ -855,6 +924,7 @@
                 if (bookedBy) {
                     div.classList.add('booked');
                     div.setAttribute('data-booker', bookedBy);
+                    div.classList.add(this.getPersonClass(bookedBy));
                 }
 
                 if (this.selectedDates.has(dateStr)) {
@@ -1008,10 +1078,12 @@
                     currentContainer.innerHTML = '<p style="color: #999;">Geen huidige reserveringen</p>';
                 } else {
                     currentContainer.innerHTML = currentBookings.map(booking => {
+                        const personClass = this.getPersonClass(booking.person);
+                        const colorClass = this.getPersonColorClass(booking.person);
                         return `
-                            <div class="booking-item current">
+                            <div class="booking-item current ${personClass}">
                                 <div class="booking-info">
-                                    <div class="booking-person">Studio — ${booking.person}</div>
+                                    <div class="booking-person ${colorClass}">Studio — ${booking.person}</div>
                                     <div class="booking-dates">
                                         ${booking.dates.map(d => this.formatDateReadable(d)).join(', ')}
                                     </div>
@@ -1028,10 +1100,12 @@
                     pastContainer.innerHTML = '<p style="color: #999;">Geen reserveringen die opruiming vereisen</p>';
                 } else {
                     pastContainer.innerHTML = pastBookings.map(booking => {
+                        const personClass = this.getPersonClass(booking.person);
+                        const colorClass = this.getPersonColorClass(booking.person);
                         return `
-                            <div class="booking-item needs-cleanup">
+                            <div class="booking-item needs-cleanup ${personClass}">
                                 <div class="booking-info">
-                                    <div class="booking-person">
+                                    <div class="booking-person ${colorClass}">
                                         Studio — ${booking.person}
                                         <span class="booking-status pending">Opruimen vereist</span>
                                     </div>
@@ -1168,6 +1242,20 @@
                 } catch (error) {
                     this.showMessage('Ongeldige gegevens! Kopieer de volledige export.', 'error');
                 }
+            }
+
+            getPersonClass(person) {
+                if (person === 'Louis') return 'person-louis';
+                if (person === 'Victor') return 'person-victor';
+                if (person === 'Chantal & Reinout') return 'person-chantal-reinout';
+                return '';
+            }
+
+            getPersonColorClass(person) {
+                if (person === 'Louis') return 'color-louis';
+                if (person === 'Victor') return 'color-victor';
+                if (person === 'Chantal & Reinout') return 'color-chantal-reinout';
+                return '';
             }
         }
 
