@@ -472,19 +472,9 @@
             background: #d5f4e6;
         }
 
-        .booking-item.needs-cleanup {
-            border-left-color: #e74c3c;
-            background: #fadbd8;
-        }
-
         .booking-item.person-louis {
             border-left-color: #3498db;
             background: #ebf5fb;
-        }
-
-        .booking-item.person-louis.needs-cleanup {
-            border-left-color: #3498db;
-            background: #d6eaf8;
         }
 
         .booking-item.person-victor {
@@ -492,19 +482,9 @@
             background: #f4ecf7;
         }
 
-        .booking-item.person-victor.needs-cleanup {
-            border-left-color: #9b59b6;
-            background: #ebdef0;
-        }
-
         .booking-item.person-chantal-reinout {
             border-left-color: #e67e22;
             background: #fef5e7;
-        }
-
-        .booking-item.person-chantal-reinout.needs-cleanup {
-            border-left-color: #e67e22;
-            background: #fdebd0;
         }
 
         .calendar-day.booked.person-louis {
@@ -592,26 +572,6 @@
             gap: 12px;
         }
 
-        .checklist-btn {
-            background: #f39c12;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85em;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .checklist-btn:hover {
-            background: #d68910;
-            transform: translateY(-2px);
-        }
-
         .delete-btn {
             background: #e74c3c;
             color: white;
@@ -630,127 +590,6 @@
         .delete-btn:hover {
             background: #c0392b;
             transform: translateY(-2px);
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal {
-            background: white;
-            border-radius: 0;
-            padding: 45px;
-            max-width: 550px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal h2 {
-            font-family: 'Cormorant Garamond', serif;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 2em;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .modal p {
-            color: #7f8c8d;
-            margin-bottom: 30px;
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-        }
-
-        .checklist {
-            margin: 30px 0;
-        }
-
-        .checklist-item {
-            display: flex;
-            align-items: center;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            background: #f8f9fa;
-            border-radius: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-
-        .checklist-item:hover {
-            background: #ecf0f1;
-            border-left-color: #2c3e50;
-            transform: translateX(5px);
-        }
-
-        .checklist-item input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
-            margin-right: 18px;
-            cursor: pointer;
-            accent-color: #2c3e50;
-        }
-
-        .checklist-item label {
-            flex: 1;
-            font-size: 1.05em;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            color: #2c3e50;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 35px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 16px 30px;
-            border: none;
-            border-radius: 0;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .modal-btn.primary {
-            background: #2c3e50;
-            color: white;
-        }
-
-        .modal-btn.primary:hover {
-            background: #1a2332;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
-        }
-
-        .modal-btn.primary:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
         .loading-overlay {
@@ -820,9 +659,6 @@
                 width: 100%;
             }
 
-            .checklist-btn, .delete-btn {
-                flex: 1;
-            }
         }
     </style>
 </head>
@@ -876,42 +712,8 @@
                 <h3 class="section-subtitle">Current Reservations</h3>
                 <div id="currentBookingsList"></div>
 
-                <h3 class="section-subtitle">Past Reservations (Requires Cleanup)</h3>
-                <div id="pastBookingsList"></div>
             </div>
 
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="checklistModal">
-        <div class="modal">
-            <h2>Housekeeping Checklist</h2>
-            <p>Please complete the checklist to finalize your reservation:</p>
-            <div class="checklist">
-                <div class="checklist-item" onclick="app.toggleChecklistItem(0)">
-                    <input type="checkbox" id="check0">
-                    <label for="check0">WC</label>
-                </div>
-                <div class="checklist-item" onclick="app.toggleChecklistItem(1)">
-                    <input type="checkbox" id="check1">
-                    <label for="check1">Badkamer</label>
-                </div>
-                <div class="checklist-item" onclick="app.toggleChecklistItem(2)">
-                    <input type="checkbox" id="check2">
-                    <label for="check2">Bed</label>
-                </div>
-                <div class="checklist-item" onclick="app.toggleChecklistItem(3)">
-                    <input type="checkbox" id="check3">
-                    <label for="check3">Keuken</label>
-                </div>
-                <div class="checklist-item" onclick="app.toggleChecklistItem(4)">
-                    <input type="checkbox" id="check4">
-                    <label for="check4">Vuilbakje</label>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-btn primary" id="submitChecklistBtn" onclick="app.submitChecklist()" disabled>Confirm Completion</button>
-            </div>
         </div>
     </div>
 
@@ -924,7 +726,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         // Firebase Configuration - YOUR DATA IS PRESERVED
         const firebaseConfig = {
@@ -947,8 +749,6 @@
                 this.selectedDates = new Set();
                 this.currentDate = new Date();
                 this.bookings = [];
-                this.checklistStates = [false, false, false, false, false];
-                this.currentChecklistBooking = null;
                 this.isAuthenticated = false;
                 this.PASSWORD = '7860';
                 this.db = db;
@@ -1024,7 +824,6 @@
 
                     this.renderCalendar();
                     this.renderBookings();
-                    this.checkForPendingCleanup();
                 }, (error) => {
                     console.error('Firebase error:', error);
                     this.showMessage('Error connecting to database. Please check your configuration.', 'error');
@@ -1159,7 +958,7 @@
 
             isDateBooked(dateStr) {
                 for (const booking of this.bookings) {
-                    if (booking.dates.includes(dateStr) && !booking.cleanupCompleted) {
+                    if (booking.dates.includes(dateStr)) {
                         return booking.person;
                     }
                 }
@@ -1214,8 +1013,7 @@
                     const booking = {
                         person: this.selectedPerson,
                         dates: Array.from(this.selectedDates).sort(),
-                        createdAt: new Date().toISOString(),
-                        cleanupCompleted: false
+                        createdAt: new Date().toISOString()
                     };
 
                     await addDoc(collection(this.db, 'bookings'), booking);
@@ -1250,29 +1048,11 @@
 
             renderBookings() {
                 const currentContainer = document.getElementById('currentBookingsList');
-                const pastContainer = document.getElementById('pastBookingsList');
                 const today = this.formatDate(new Date());
 
-                const currentBookings = [];
-                const pastBookings = [];
-
-                this.bookings.forEach(booking => {
-                    if (booking.cleanupCompleted) {
-                        return;
-                    }
-
-                    const lastDate = booking.dates[booking.dates.length - 1];
-                    const isPast = lastDate < today;
-
-                    if (isPast) {
-                        pastBookings.push(booking);
-                    } else {
-                        currentBookings.push(booking);
-                    }
-                });
-
-                currentBookings.sort((a, b) => a.dates[0].localeCompare(b.dates[0]));
-                pastBookings.sort((a, b) => a.dates[0].localeCompare(b.dates[0]));
+                const currentBookings = this.bookings
+                    .filter(booking => booking.dates[booking.dates.length - 1] >= today)
+                    .sort((a, b) => a.dates[0].localeCompare(b.dates[0]));
 
                 if (currentBookings.length === 0) {
                     currentContainer.innerHTML = '<p style="color: #95a5a6; font-style: italic;">No current reservations</p>';
@@ -1289,32 +1069,6 @@
                                     </div>
                                 </div>
                                 <div class="booking-actions">
-                                    <button class="delete-btn" onclick="window.appInstance.deleteBooking('${booking.id}')">Cancel</button>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-
-                if (pastBookings.length === 0) {
-                    pastContainer.innerHTML = '<p style="color: #95a5a6; font-style: italic;">No reservations requiring cleanup</p>';
-                } else {
-                    pastContainer.innerHTML = pastBookings.map(booking => {
-                        const personClass = this.getPersonClass(booking.person);
-                        const colorClass = this.getPersonColorClass(booking.person);
-                        return `
-                            <div class="booking-item needs-cleanup ${personClass}">
-                                <div class="booking-info">
-                                    <div class="booking-person ${colorClass}">
-                                        The Studio — ${booking.person}
-                                        <span class="booking-status pending">Cleanup Required</span>
-                                    </div>
-                                    <div class="booking-dates">
-                                        ${booking.dates.map(d => this.formatDateReadable(d)).join(', ')}
-                                    </div>
-                                </div>
-                                <div class="booking-actions">
-                                    <button class="checklist-btn" onclick="window.appInstance.showChecklistModal('${booking.id}')">Complete Checklist</button>
                                     <button class="delete-btn" onclick="window.appInstance.deleteBooking('${booking.id}')">Cancel</button>
                                 </div>
                             </div>
@@ -1345,45 +1099,6 @@
                 return `${day}-${month}-${year}`;
             }
 
-            checkForPendingCleanup() {
-                this.renderBookings();
-            }
-
-            showChecklistModal(bookingId) {
-                this.currentChecklistBooking = bookingId;
-                this.checklistStates = [false, false, false, false, false];
-
-                for (let i = 0; i < 5; i++) {
-                    document.getElementById(`check${i}`).checked = false;
-                }
-
-                document.getElementById('submitChecklistBtn').disabled = true;
-                document.getElementById('checklistModal').classList.add('show');
-            }
-
-            toggleChecklistItem(index) {
-                const checkbox = document.getElementById(`check${index}`);
-                checkbox.checked = !checkbox.checked;
-                this.checklistStates[index] = checkbox.checked;
-
-                const allChecked = this.checklistStates.every(state => state === true);
-                document.getElementById('submitChecklistBtn').disabled = !allChecked;
-            }
-
-            async submitChecklist() {
-                try {
-                    await updateDoc(doc(this.db, 'bookings', this.currentChecklistBooking), {
-                        cleanupCompleted: true
-                    });
-
-                    document.getElementById('checklistModal').classList.remove('show');
-                    this.showMessage('Housekeeping checklist completed! Reservation finalized.', 'success');
-                } catch (error) {
-                    console.error('Error updating booking:', error);
-                    this.showMessage('Error saving checklist. Please try again.', 'error');
-                }
-            }
-
             getPersonClass(person) {
                 if (person === 'Louis') return 'person-louis';
                 if (person === 'Victor') return 'person-victor';
@@ -1402,12 +1117,6 @@
         const app = new StudioBooking();
         window.appInstance = app;
         window.app = app;
-
-        setInterval(() => {
-            if (app.isAuthenticated) {
-                app.checkForPendingCleanup();
-            }
-        }, 60000);
     </script>
 </body>
 </html>
