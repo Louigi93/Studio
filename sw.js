@@ -1,4 +1,4 @@
-const CACHE = 'studio-booking-v1';
+const CACHE = 'studio-booking-v2';
 const ASSETS = [
     '/',
     '/index.html',
