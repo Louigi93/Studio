@@ -1,0 +1,834 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #1a2332 0%, #2c3e50 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* ── Login ─────────────────────────────────────────────────── */
+
+.login-container {
+    max-width: 480px;
+    margin: 80px auto;
+    background: #ffffff;
+    border-radius: 0;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    padding: 60px 50px;
+    text-align: center;
+    border-top: 3px solid #2c3e50;
+}
+
+.login-container .logo {
+    width: 160px;
+    height: auto;
+    display: block;
+    margin: 0 auto 30px;
+    background: transparent;
+}
+
+.login-container h1 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.2em;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.login-container .subtitle {
+    font-family: 'Montserrat', sans-serif;
+    color: #7f8c8d;
+    font-size: 0.9em;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    font-weight: 300;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 18px 25px;
+    border: 1px solid #d5d8dc;
+    border-radius: 0;
+    font-size: 1em;
+    margin-bottom: 25px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 4px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #2c3e50;
+    background: #ffffff;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 18px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-size: 1em;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: all 0.4s ease;
+}
+
+.login-container button:hover {
+    background: #1a2332;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
+}
+
+.error-msg {
+    color: #e74c3c;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* ── Main layout ────────────────────────────────────────────── */
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    display: none;
+}
+
+.container.show {
+    display: block;
+}
+
+.header {
+    background: linear-gradient(135deg, #1a2332 0%, #2c3e50 100%);
+    color: white;
+    padding: 25px 60px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header .logo {
+    width: 200px;
+    height: auto;
+    display: block;
+    margin: 0 auto 15px;
+    background: transparent;
+    filter: brightness(1.2) contrast(1.1);
+    opacity: 0.95;
+}
+
+.header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2em;
+    margin-bottom: 5px;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+.header p {
+    font-family: 'Montserrat', sans-serif;
+    opacity: 0.9;
+    font-size: 0.85em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+.logout-btn {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+    border-radius: 0;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.content {
+    padding: 50px;
+    background: #f8f9fa;
+}
+
+.form-section {
+    margin-bottom: 40px;
+    background: white;
+    padding: 35px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 15px;
+}
+
+/* ── Person selector ────────────────────────────────────────── */
+
+.person-selector {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.person-btn {
+    flex: 1;
+    min-width: 180px;
+    padding: 20px 30px;
+    border: 2px solid #d5d8dc;
+    background: white;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 1.05em;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.person-btn:hover {
+    border-color: #2c3e50;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(44, 62, 80, 0.15);
+}
+
+.person-btn.active {
+    background: #2c3e50;
+    color: white;
+    border-color: #2c3e50;
+}
+
+/* ── Calendar ───────────────────────────────────────────────── */
+
+.calendar {
+    background: white;
+    border-radius: 0;
+    padding: 30px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.calendar-header button {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.calendar-header button:hover {
+    background: #1a2332;
+    transform: translateY(-2px);
+}
+
+.calendar-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #2c3e50;
+    font-size: 1.6em;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: 600;
+    color: #7f8c8d;
+    padding: 12px;
+    font-size: 0.85em;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d5d8dc;
+    border-radius: 0;
+    cursor: pointer;
+    background: white;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 8px;
+}
+
+.calendar-day:hover:not(.disabled):not(.other-month) {
+    border-color: #2c3e50;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(44, 62, 80, 0.15);
+}
+
+.calendar-day.disabled {
+    background: #f8f9fa;
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.calendar-day.other-month {
+    opacity: 0.25;
+    cursor: default;
+}
+
+.calendar-day.selected {
+    background: #2c3e50;
+    color: white;
+    border-color: #2c3e50;
+}
+
+/* Range start: pulsing ring to signal "waiting for end date" */
+.calendar-day.range-start {
+    background: #2c3e50;
+    color: white;
+    border-color: #2c3e50;
+    animation: rangeStartPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rangeStartPulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.35); }
+    50%       { box-shadow: 0 0 0 7px rgba(44, 62, 80, 0.08); }
+}
+
+.calendar-day.booked {
+    background: #fef5e7;
+    border-color: #f39c12;
+}
+
+.calendar-day.booked::after {
+    content: attr(data-booker);
+    font-size: 0.65em;
+    position: absolute;
+    bottom: 3px;
+    color: #d68910;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.day-number {
+    font-size: 1.15em;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* ── Range hint bar ─────────────────────────────────────────── */
+
+.range-hint {
+    margin-top: 15px;
+    font-size: 0.85em;
+    color: #7f8c8d;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    min-height: 32px;
+}
+
+.clear-selection-btn {
+    background: none;
+    border: 1px solid #bdc3c7;
+    color: #7f8c8d;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.clear-selection-btn:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+/* ── Submit ─────────────────────────────────────────────────── */
+
+.submit-section {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.submit-btn {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 18px 60px;
+    border-radius: 0;
+    font-size: 1.1em;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 25px rgba(44, 62, 80, 0.2);
+}
+
+.submit-btn:hover {
+    background: #1a2332;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(44, 62, 80, 0.3);
+}
+
+.submit-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* ── Messages ───────────────────────────────────────────────── */
+
+.message {
+    margin-top: 25px;
+    padding: 18px 25px;
+    border-radius: 0;
+    display: none;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.message.success {
+    background: #d5f4e6;
+    color: #0e6251;
+    border-left: 4px solid #27ae60;
+}
+
+.message.error {
+    background: #fadbd8;
+    color: #922b21;
+    border-left: 4px solid #e74c3c;
+}
+
+.message.show {
+    display: block;
+}
+
+/* ── Bookings list ──────────────────────────────────────────── */
+
+.bookings-section {
+    margin-top: 40px;
+    background: white;
+    padding: 35px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.bookings-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 15px;
+}
+
+.section-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    color: #7f8c8d;
+    font-size: 1em;
+    margin-top: 35px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.booking-item {
+    background: #f8f9fa;
+    padding: 20px 25px;
+    border-radius: 0;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.booking-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.booking-item.current {
+    border-left-color: #2c3e50;
+    background: #ecf4ff;
+}
+
+.booking-item.completed {
+    border-left-color: #27ae60;
+    background: #d5f4e6;
+}
+
+.booking-item.person-louis {
+    border-left-color: #3498db;
+    background: #ebf5fb;
+}
+
+.booking-item.person-victor {
+    border-left-color: #9b59b6;
+    background: #f4ecf7;
+}
+
+.booking-item.person-chantal-reinout {
+    border-left-color: #e67e22;
+    background: #fef5e7;
+}
+
+/* ── Per-person calendar colours ────────────────────────────── */
+
+.calendar-day.booked.person-louis {
+    background: #ebf5fb;
+    border-color: #3498db;
+}
+
+.calendar-day.booked.person-louis::after {
+    color: #2874a6;
+}
+
+.calendar-day.booked.person-victor {
+    background: #f4ecf7;
+    border-color: #9b59b6;
+}
+
+.calendar-day.booked.person-victor::after {
+    color: #7d3c98;
+}
+
+.calendar-day.booked.person-chantal-reinout {
+    background: #fef5e7;
+    border-color: #e67e22;
+}
+
+.calendar-day.booked.person-chantal-reinout::after {
+    color: #ca6f1e;
+}
+
+/* ── Per-person text colours ────────────────────────────────── */
+
+.booking-person.color-louis       { color: #3498db; }
+.booking-person.color-victor      { color: #9b59b6; }
+.booking-person.color-chantal-reinout { color: #e67e22; }
+
+.booking-info   { flex: 1; }
+
+.booking-person {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.1em;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.booking-dates {
+    color: #7f8c8d;
+    margin-top: 8px;
+    font-size: 0.95em;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.booking-status {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 0;
+    font-size: 0.8em;
+    font-weight: 600;
+    margin-left: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.booking-status.pending   { background: #f39c12; color: white; }
+.booking-status.completed { background: #27ae60; color: white; }
+
+.booking-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.delete-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}
+
+/* ── Loading overlay ────────────────────────────────────────── */
+
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-overlay.show {
+    display: flex;
+}
+
+.loading-spinner {
+    background: white;
+    padding: 40px;
+    border-radius: 0;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+}
+
+/* ── Confirmation modal ─────────────────────────────────────── */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal {
+    background: white;
+    max-width: 480px;
+    width: 100%;
+    padding: 50px 45px 40px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    border-top: 3px solid #2c3e50;
+}
+
+.modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #2c3e50;
+    font-size: 2em;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+}
+
+.modal-body {
+    border: 1px solid #ecf0f1;
+    padding: 25px 30px;
+    margin-bottom: 30px;
+    text-align: left;
+    background: #f8f9fa;
+}
+
+.modal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid #ecf0f1;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.modal-row:last-child {
+    border-bottom: none;
+}
+
+.modal-label {
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #7f8c8d;
+}
+
+.modal-value {
+    font-size: 0.95em;
+    color: #2c3e50;
+    font-weight: 500;
+    text-align: right;
+    max-width: 65%;
+}
+
+.modal-dates-list {
+    font-size: 0.9em;
+    color: #2c3e50;
+    font-weight: 400;
+    text-align: right;
+    max-width: 65%;
+    line-height: 1.7;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.modal-back-btn {
+    flex: 1;
+    padding: 16px;
+    background: white;
+    color: #2c3e50;
+    border: 2px solid #d5d8dc;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.modal-back-btn:hover {
+    border-color: #2c3e50;
+}
+
+.modal-confirm-btn {
+    flex: 2;
+    padding: 16px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.4s ease;
+}
+
+.modal-confirm-btn:hover {
+    background: #1a2332;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .calendar-day {
+        font-size: 0.85em;
+    }
+
+    .day-number {
+        font-size: 1em;
+    }
+
+    .calendar-day.booked::after {
+        font-size: 0.55em;
+    }
+
+    .person-btn {
+        min-width: 100%;
+    }
+
+    .logout-btn {
+        position: static;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .content {
+        padding: 30px 20px;
+    }
+
+    .form-section {
+        padding: 25px 20px;
+    }
+
+    .booking-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .booking-actions {
+        width: 100%;
+    }
+
+    .modal {
+        padding: 35px 25px 30px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+}
